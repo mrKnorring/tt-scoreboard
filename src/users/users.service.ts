@@ -1,6 +1,6 @@
 // src/users/users.service.ts
 import { Injectable } from '@nestjs/common'
-import { Court, User } from 'src/interfaces'
+import { BgColorEnum, Court, FontColorEnum, User } from 'src/interfaces'
 
 @Injectable()
 export class UsersService {
@@ -15,7 +15,10 @@ export class UsersService {
 				password: 'pingis',
 				court: {
 					title: 'Div 3 ÖSSÖ',
-					color: 'dark',
+					style: {
+						font: FontColorEnum.white,
+						bg: BgColorEnum.dark
+					},
 					matches: [
 						{
 							id: 1,
@@ -48,6 +51,38 @@ export class UsersService {
 								image:
 									'https://res.cloudinary.com/mrknorring/image/upload/c_fill,h_300,w_300/pingiskalk/clubs/2727'
 							}
+						},
+						{
+							id: 3,
+							table: 'Bord 5-6',
+							homeTeam: {
+								score: 3,
+								name: 'Spårvägen C1',
+								image:
+									'https://res.cloudinary.com/mrknorring/image/upload/c_fill,h_300,w_300/pingiskalk/clubs/3202'
+							},
+							awayTeam: {
+								score: 3,
+								name: 'Västers BTK C2',
+								image:
+									'https://res.cloudinary.com/mrknorring/image/upload/c_fill,h_300,w_300/pingiskalk/clubs/3345'
+							}
+						},
+						{
+							id: 4,
+							table: 'Bord 7-8',
+							homeTeam: {
+								score: 1,
+								name: 'Ljungsbro BTK B',
+								image:
+									'https://res.cloudinary.com/mrknorring/image/upload/c_fill,h_300,w_300/pingiskalk/clubs/3033'
+							},
+							awayTeam: {
+								score: 5,
+								name: 'Huskvarna AI BTK A',
+								image:
+									'https://res.cloudinary.com/mrknorring/image/upload/c_fill,h_300,w_300/pingiskalk/clubs/2875'
+							}
 						}
 					]
 				}
@@ -59,7 +94,10 @@ export class UsersService {
 				password: 'pingis',
 				court: {
 					title: 'Div 2 Damer Norra',
-					color: 'blue',
+					style: {
+						bg: BgColorEnum.blue,
+						font: FontColorEnum.white
+					},
 					matches: [
 						{
 							id: 1,

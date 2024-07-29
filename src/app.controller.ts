@@ -56,9 +56,11 @@ export class AppController {
 	}
 
 	@Get('court/:userId')
+	@Render('court')
 	async court(@Param('userId') userId: string, @Res() res: Response) {
 		const court = await this.usersService.getCourt(userId)
-		const layoutExt = court.color ? `-${court.color}` : ''
-		res.render('court', { layout: `main${layoutExt}`, court })
+		if (!court.title) res.redirect('/')
+
+		return { court, fontColor: court.style.font, bgColor: court.style.bg }
 	}
 }
