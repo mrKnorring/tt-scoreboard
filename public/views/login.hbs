@@ -1,26 +1,43 @@
 <!-- public/views/login.hbs -->
-<div class="mdl-layout mdl-js-layout mdl-color--grey-100">
-  <main class="mdl-layout__content">
-    <div class="mdl-card mdl-shadow--6dp">
-      <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
-        <h2 class="mdl-card__title-text">Nest Cats</h2>
-      </div>
-      <div class="mdl-card__supporting-text">
-        <form action="/login" method="post">
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" name="username" id="username" />
-            <label class="mdl-textfield__label" for="username">Username</label>
-          </div>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="password" name="password" id="password" />
-            <label class="mdl-textfield__label" for="password">Password</label>
-          </div>
-          <div class="mdl-card__actions mdl-card--border">
-            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Log In</button>
-            <span class="mdl-textfield__error">{{ message }}</span>
-          </div>
-        </form>
-      </div>
-    </div>
-  </main>
+<header class="flex w-full justify-center items-center relative">
+	<h1 class="text-3xl mt-4 font-bold m-auto">Logga in</h1>
+	<div class=" absolute right-4 bottom-2">
+		<a href='/'>Hem</a>
+	</div>
+</header>
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+		<form class="space-y-6" action="/login" method="POST">
+			<div>
+				<label for="email" class="block text-sm font-medium leading-6 text-gray-900">Användarnamn</label>
+				<div class="mt-2">
+					<input id="username" name="username" type="username" autocomplete="username" required
+						class="form-input px-2">
+				</div>
+			</div>
+
+			<div>
+				<div class="flex items-center justify-between">
+					<label for="password" class="block text-sm font-medium leading-6 text-gray-900">Lösenord</label>
+					{{!-- <div class="text-sm">
+						<a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+					</div> --}}
+				</div>
+				<div class="mt-2">
+					<input id="password" name="password" type="password" autocomplete="current-password" required
+						class="form-input">
+				</div>
+			</div>
+
+			<div>
+				<button type="submit" class="form-btn">
+					Logga in
+				</button>
+			</div>
+		</form>
+
+		<p class="mt-10 text-center text-sm text-gray-500">
+			<span class="">{{ message }}</span>
+		</p>
+	</div>
 </div>

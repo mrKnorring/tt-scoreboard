@@ -10,14 +10,21 @@ import { LoginGuard } from './common/guards/login.guard'
 @UseFilters(AuthExceptionFilter)
 export class AppController {
 	@Get('/')
-	@Render('login')
+	@Render('dashboard')
 	index(@Request() req): { message: string } {
+		return { message: 'hello world' }
+	}
+
+	// @UseGuards(LoginGuard)
+	@Get('/login')
+	@Render('login')
+	login(@Request() req): { message: string } {
 		return { message: req.flash('loginError') }
 	}
 
 	@UseGuards(LoginGuard)
 	@Post('/login')
-	login(@Res() res: Response) {
+	loggingIn(@Res() res: Response) {
 		res.redirect('/home')
 	}
 
