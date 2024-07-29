@@ -50,6 +50,11 @@ export class AppController {
 		return res.sendFile(url, { root: 'public' })
 	}
 
+	@Get('/court')
+	missingCourtId(@Res() res: Response) {
+		res.redirect('/')
+	}
+
 	@Get('court/:userId')
 	async court(@Param('userId') userId: string, @Res() res: Response) {
 		const court = await this.usersService.getCourt(userId)
