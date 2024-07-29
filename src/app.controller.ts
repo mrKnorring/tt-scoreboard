@@ -1,5 +1,5 @@
 // src/app.controller.ts
-import { Controller, Get, Post, Render, Request, Res, UseFilters, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Render, Req, Request, Res, UseFilters, UseGuards } from '@nestjs/common'
 import { Response } from 'express'
 
 import { AuthExceptionFilter } from './common/filters/auth-exceptions.filter'
@@ -39,5 +39,11 @@ export class AppController {
 	logout(@Request() req, @Res() res: Response) {
 		req.logout()
 		res.redirect('/')
+	}
+
+	@Get('public/*')
+	test(@Req() req, @Res() res: Response) {
+		const url = req.url.split('/public')[1]
+		return res.sendFile(url, { root: 'public' })
 	}
 }
