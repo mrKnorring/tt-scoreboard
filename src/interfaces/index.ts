@@ -3,16 +3,21 @@ export interface User {
 	username: string
 	password: string
 	name: string
-	court: Court
+	venue: Venue
+}
+
+export interface Venue {
+	name: string
+	courts: Court[]
 }
 
 export interface Court {
+	courtId: number
 	title: string
 	style: {
 		bg: TBgColor
 		font: TFontColor
 	}
-
 	matches: Match[]
 }
 

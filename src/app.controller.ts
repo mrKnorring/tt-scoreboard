@@ -55,12 +55,11 @@ export class AppController {
 		res.redirect('/')
 	}
 
-	@Get('court/:userId')
+	@Get('court/:courtId')
 	@Render('court')
-	async court(@Param('userId') userId: string, @Res() res: Response) {
-		const court = await this.usersService.getCourt(userId)
+	async court(@Param('courtId') courtId: string, @Res() res: Response) {
+		const court = await this.usersService.getCourt(courtId)
 		if (!court.title) res.redirect('/')
-
 		return { court, fontColor: court.style.font, bgColor: court.style.bg }
 	}
 }
