@@ -14,7 +14,7 @@ export class UsersService {
 				name: 'Linköpings PK',
 				password: 'pingis',
 				venue: {
-					name: 'Spångåhallen',
+					name: 'Stångåhallen',
 					courts: [
 						{
 							courtId: 1,
