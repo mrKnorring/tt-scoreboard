@@ -3,7 +3,7 @@
 </header>
 <main class="max-w-screen-xl mx-auto mt-12">
 
-	<table class="w-full border-separate border-spacing-y-11 font-bold">
+	<table class="w-full border-separate border-spacing-y-4 font-bold">
 
 		{{#each court.matches}}
 		<tr>
@@ -29,3 +29,24 @@
 		{{/each}}
 	</table>
 </main>
+<footer class="absolute bottom-2 right-8 text-sm" x-data="state">
+	Uppdaterades senast: <span x-text="time"></span>
+</footer>
+<script>
+	setTimeout(() => location.reload(), 120000);
+
+
+	const getCurrentTime = () => {
+		const now = new Date();
+		const hours = String(now.getHours()).padStart(2, '0');
+		const minutes = String(now.getMinutes()).padStart(2, '0');
+		const seconds = String(now.getSeconds()).padStart(2, '0');
+		return `${hours}:${minutes}`;
+	}
+
+	document.addEventListener('alpine:init', () => {
+		Alpine.data('state', () => ({
+			time: getCurrentTime(),
+		}))
+	})
+</script>

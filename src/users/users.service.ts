@@ -11,6 +11,7 @@ export class UsersService {
 			{
 				userId: 1,
 				username: 'lpk',
+				name: 'Linköpings PK',
 				password: 'pingis',
 				court: {
 					title: 'Div 3 ÖSSÖ',
@@ -61,5 +62,10 @@ export class UsersService {
 	async getCourt(id: string): Promise<Court> {
 		const user = this.users.find(({ userId }) => userId === +id)
 		return user?.court || ({} as Court)
+	}
+
+	async getUsers() {
+		const users = this.users.map(({ name, userId }) => ({ userId, name }))
+		return users
 	}
 }

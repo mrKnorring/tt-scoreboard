@@ -14,8 +14,9 @@ export class AppController {
 
 	@Get('/')
 	@Render('dashboard')
-	index(): { message: string } {
-		return { message: 'hello world' }
+	async index() {
+		const users = await this.usersService.getUsers()
+		return { users }
 	}
 
 	@Get('/login')

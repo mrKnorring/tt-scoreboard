@@ -2,6 +2,7 @@ export interface User {
 	userId: number
 	username: string
 	password: string
+	name: string
 	court: Court
 }
 
