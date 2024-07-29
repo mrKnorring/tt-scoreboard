@@ -1,15 +1,76 @@
 <!-- public/views/home.hbs -->
-<div class="mdl-layout mdl-js-layout mdl-color--grey-100">
-  <main class="mdl-layout__content">
-    <div class="mdl-card mdl-shadow--6dp">
-      <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
-        <h2 class="mdl-card__title-text">Welcome {{ user.username }}!</h2>
-      </div>
-      <div class="mdl-card__supporting-text">
-        <div class="mdl-card__actions mdl-card--border">
-          <a class="mdl-button" href='/profile'>GetProfile</a>
-        </div>
-      </div>
-    </div>
-  </main>
+<div x-data="state">
+
+	<header class="flex w-full justify-center items-center relative">
+		<h1 class="text-3xl mt-4 font-bold m-auto"><span class="uppercase ">{{ user.username }}</span> inställningar
+		</h1>
+		<div class=" absolute right-4 bottom-2">
+			<a href='/logout'>Logga ut </a>
+		</div>
+	</header>
+
+	<main class="p-4">
+		<div class="my-2 grid grid-cols-4 gap-4 ">
+			<div class="col-span-3 ">
+				<input id="search" name="search" type="text" autocomplete="current-search" class="form-input"
+					placeholder="Sök klubb" x-model="search" @keyup.enter="searchClub">
+
+			</div>
+			<div class="col-span-1">
+
+				<button class="form-btn" @click="searchClub">Sök</button>
+			</div>
+		</div>
+
+		<div x-show="open">
+			<template x-if="clubUrl">
+				<img :src="clubUrl" class="max-w-32" />
+			</template>
+			<template x-if="!clubUrl">
+				<img src="/public/no-logo.png" class="max-w-32" />
+			</template>
+			<strong x-text="clubName"></strong>
+		</div>
+	</main>
+
+
+	<script>
+
+		const fetchClub = async (search) => {
+			const url = 'https://api-pingiskalk-wwr1.onrender.com/clubs/search'
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ search }),
+			})
+			return await response.json()
+		}
+
+		document.addEventListener('alpine:init', () => {
+			Alpine.data('state', () => ({
+				open: false,
+				clubUrl: '',
+				clubName: '',
+				search: '',
+
+				toggle() {
+					this.open = !this.open
+				},
+				async searchClub() {
+					this.open = false
+					const club = await fetchClub(this.search)
+					if (club) {
+						if (club.image) {
+
+							this.clubUrl = club.image.replaceAll('{size}', '300')
+						} else {
+							this.clubUrl = ''
+						}
+						this.clubName = club.alias
+						this.open = true
+					}
+				}
+			}))
+		})
+	</script>
 </div>
