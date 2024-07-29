@@ -11,7 +11,7 @@ import { LoginGuard } from './common/guards/login.guard'
 export class AppController {
 	@Get('/')
 	@Render('dashboard')
-	index(@Request() req): { message: string } {
+	index(): { message: string } {
 		return { message: 'hello world' }
 	}
 
@@ -32,13 +32,6 @@ export class AppController {
 	@Get('/home')
 	@Render('home')
 	getHome(@Request() req) {
-		return { user: req.user }
-	}
-
-	@UseGuards(AuthenticatedGuard)
-	@Get('/profile')
-	@Render('profile')
-	getProfile(@Request() req) {
 		return { user: req.user }
 	}
 
