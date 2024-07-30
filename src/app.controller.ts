@@ -1,10 +1,24 @@
 // src/app.controller.ts
-import { Controller, Get, Param, Post, Render, Req, Request, Res, UseFilters, UseGuards } from '@nestjs/common'
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	Put,
+	Render,
+	Req,
+	Request,
+	Res,
+	UseFilters,
+	UseGuards
+} from '@nestjs/common'
 import { Response } from 'express'
 
 import { AuthExceptionFilter } from './common/filters/auth-exceptions.filter'
 import { AuthenticatedGuard } from './common/guards/authenticated.guard'
 import { LoginGuard } from './common/guards/login.guard'
+import { UserUpdateDto } from './users/users.dto'
 import { UsersService } from './users/users.service'
 
 @Controller()
@@ -60,6 +74,14 @@ export class AppController {
 	async court(@Param('courtId') courtId: string, @Res() res: Response) {
 		const court = await this.usersService.getCourt(courtId)
 		if (!court.title) res.redirect('/')
-		return { court, fontColor: court.style.font, bgColor: court.style.bg }
+		const { title, matches, style } = court
+		return { title, matches, fontColor: style.font, bgColor: style.bg }
+	}
+
+	@UseGuards(AuthenticatedGuard)
+	@Put('users')
+	async updateUser(@Request() req, @Body() dto: UserUpdateDto) {
+		const userId = +req.user.id
+		return await this.usersService.update(userId, dto)
 	}
 }
