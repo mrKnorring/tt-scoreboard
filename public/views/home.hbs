@@ -1,7 +1,6 @@
 <!-- public/views/home.hbs -->
 <div x-data="state">
-
-	<header class="flex w-full justify-center items-center relative">
+	<header class="flex w-full justify-center items-center relative ">
 		<h1 class="text-3xl mt-4 font-bold m-auto">Inställningar</h1>
 		<div class=" absolute right-4 bottom-2">
 			<a href='/logout'>Logga ut </a>
@@ -12,7 +11,7 @@
 		<span class="uppercase ">({{ user.username }})</span>
 	</h3>
 
-	<main class="p-4">
+	<main class="p-4 max-w-screen-lg m-auto  ">
 		{{!-- SEARCH CLUB --}}
 		<section>
 			<h3 class="text-xl">Sök klubb</h3>
@@ -38,6 +37,58 @@
 				<strong x-text="clubName"></strong>
 			</div>
 		</section>
+		{{#each user.venue.courts}}
+		<section>
+			<h3 class="text-xl">{{title}}</h3>
+			<h5>
+				<span>{{style.font}}</span>
+				<span>{{style.bg}}</span>
+			</h5>
+			<table class="w-full my-6 border-collapse border-slate-400">
+				{{#each matches}}
+				<tr>
+					<td class="border border-slate-400" rowspan="2">
+						<input name="search" type="text" class="form-input" value="{{table}}">
+
+					</td>
+					<td class="border border-slate-400 text-center">
+						<div class="flex justify-center">
+							<img src="{{homeTeam.image}}" class="max-w-12" />
+						</div>
+					</td>
+					<td class="border border-slate-400">
+						<input name="homeTeamName" type="text" class="form-input" value="{{homeTeam.name}}">
+					</td>
+					<td class="border border-slate-400">
+						<input name="homeTeamScore" type="text" class="form-input" value="{{homeTeam.score}}">
+					</td>
+					<td rowspan="2" class="border border-slate-400 px-2">
+						<div class="flex flex-col gap-2">
+
+							<button class="form-btn">Spara</button>
+							<button class="form-btn btn-danger">Ta bort</button>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="border border-slate-400">
+						<div class="flex justify-center">
+							<img src="{{awayTeam.image}}" class="max-w-12" />
+						</div>
+					</td>
+					<td class="border border-slate-400">
+						<input name="awayTeamName" type="text" class="form-input" value="{{awayTeam.name}}">
+
+					</td>
+					<td class="border border-slate-400">
+						<input name="awayTeamScore" type="text" class="form-input" value="{{awayTeam.score}}">
+
+					</td>
+				</tr>
+				{{/each }}
+			</table>
+		</section>
+		{{/each}}
 		{{!-- CHANGE PASSWORD --}}
 		<section>
 			<h3 class="text-xl cursor-pointer" @click="passwordExpanded = !passwordExpanded">
@@ -73,75 +124,75 @@
 			</div>
 		</section>
 	</main>
-
-
-	<script>
-		// FUNCTIONS
-		const fetchClub = async (search) => {
-			const url = 'https://api-pingiskalk-wwr1.onrender.com/clubs/search'
-			const response = await fetch(url, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ search }),
-			})
-			return await response.json()
-		}
-
-
-		const postChangePassword = async (newPassword, confirmPassword) => {
-			const url = '/users/change-password'
-			const response = await fetch(url, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ newPassword, confirmPassword }),
-			})
-			return await response.json()
-		}
-
-		//	STATE
-		document.addEventListener('alpine:init', () => {
-			Alpine.data('state', () => ({
-				open: false,
-				clubUrl: '',
-				clubName: '',
-				search: '',
-				newPassword: '',
-				confirmPassword: '',
-				passwordMessage: '',
-				passwordExpanded: false,
-
-				toggle() {
-					this.open = !this.open
-				},
-				async searchClub() {
-					this.open = false
-					const club = await fetchClub(this.search)
-					if (club) {
-						if (club.image) {
-
-							this.clubUrl = club.image.replaceAll('{size}', '300')
-						} else {
-							this.clubUrl = ''
-						}
-						this.clubName = club.alias
-						this.open = true
-					}
-				},
-				disableNewPasswordBtn() {
-					return !(this.newPassword && this.newPassword === this.confirmPassword)
-				},
-				async changePassword() {
-					this.passwordMessage = ''
-					const res = await postChangePassword(this.newPassword, this.confirmPassword)
-					if (res instanceof Object) {
-						this.passwordMessage = 'Lösenordet sparat'
-						this.confirmPassword = ''
-						this.newPassword = ''
-					} else {
-						this.passwordMessage = res.message
-					}
-				}
-			}))
-		})
-	</script>
 </div>
+
+<script>
+	// FUNCTIONS
+	const fetchClub = async (search) => {
+		const url = 'https://api-pingiskalk-wwr1.onrender.com/clubs/search'
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ search }),
+		})
+		return await response.json()
+	}
+
+
+	const postChangePassword = async (newPassword, confirmPassword) => {
+		const url = '/users/change-password'
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ newPassword, confirmPassword }),
+		})
+		return await response.json()
+	}
+
+	//	STATE
+	document.addEventListener('alpine:init', () => {
+		Alpine.data('state', () => ({
+			open: false,
+			clubUrl: '',
+			clubName: '',
+			search: '',
+			newPassword: '',
+			confirmPassword: '',
+			passwordMessage: '',
+			passwordExpanded: false,
+			user: '{{user}}',
+
+			toggle() {
+				this.open = !this.open
+			},
+			async searchClub() {
+				this.open = false
+				const club = await fetchClub(this.search)
+				if (club) {
+					if (club.image) {
+
+						this.clubUrl = club.image.replaceAll('{size}', '300')
+					} else {
+						this.clubUrl = ''
+					}
+					this.clubName = club.alias
+					this.open = true
+				}
+			},
+			disableNewPasswordBtn() {
+				return !(this.newPassword && this.newPassword === this.confirmPassword)
+			},
+			async changePassword() {
+				this.passwordMessage = ''
+				const res = await postChangePassword(this.newPassword, this.confirmPassword)
+				if (res instanceof Object) {
+					this.passwordMessage = 'Lösenordet sparat'
+					this.confirmPassword = ''
+					this.newPassword = ''
+				} else {
+					this.passwordMessage = res.message
+				}
+			},
+		}))
+	})
+</script>

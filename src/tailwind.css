@@ -30,6 +30,13 @@ a {
 	disabled:opacity-50;
 }
 
+.btn-danger {
+	@apply bg-red-600 
+	text-white
+	enabled:hover:bg-red-500
+	focus-visible:outline-red-600;
+}
+
 .form-input {
 	@apply block
 	w-full
@@ -54,5 +61,5 @@ a {
 }
 
 section {
-	@apply mt-8 p-4 bg-slate-50 rounded-md border-2 border-gray-100;
+	@apply mt-8 p-4 bg-slate-100 rounded-md border-2 border-slate-200;
 }
