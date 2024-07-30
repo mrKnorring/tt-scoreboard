@@ -21,7 +21,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
 		const request = ctx.getRequest<IRequestFlash>()
 
 		if (exception instanceof UnauthorizedException || exception instanceof ForbiddenException) {
-			request.flash('loginError', 'Please try again!')
+			request.flash('loginError', 'Inloggning misslyckades! Försök igen ...')
 			response.redirect('/login')
 		} else {
 			response.redirect('/error')
