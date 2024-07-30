@@ -1,9 +1,10 @@
 // src/users/users.service.ts
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import * as bcrypt from 'bcryptjs'
 import { Model } from 'mongoose'
-import { Court, User } from 'src/interfaces'
 import { UserUpdateDto } from './users.dto'
+import { Court, User } from './users.schema'
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,7 @@ export class UsersService {
 		const user: User = await this.userModel
 			.findOne({ 'venue.courts': { $elemMatch: { courtId: +courtId } } }, { 'venue.courts.$': 1 })
 			.lean()
-		return user?.venue?.courts[0] || ({} as Court)
+		return (user && user.venue && user.venue.courts[0]) || ({} as Court)
 	}
 
 	async getUsers() {
@@ -33,5 +34,12 @@ export class UsersService {
 		await this.userModel.updateOne({ userId }, dto)
 
 		return await this.userModel.findOne({ userId })
+	}
+
+	async updatePassword(userId: number, newPassword: string): Promise<User> {
+		const password = await bcrypt.hashSync(newPassword)
+		await this.userModel.updateOne({ userId }, { $set: { password, updatedAt: Date.now() } })
+
+		return await this.findOne(userId)
 	}
 }

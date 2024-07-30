@@ -106,7 +106,7 @@ export class Venue {
 export type VenueDocument = Venue & Document
 export const VenueSchema = SchemaFactory.createForClass(Venue)
 
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, timestamps: true })
 export class User {
 	@Prop({
 		type: Number,
@@ -136,18 +136,6 @@ export class User {
 		type: VenueSchema
 	})
 	venue: Venue
-
-	@Prop({
-		type: Date,
-		default: () => new Date()
-	})
-	createdAt: Date
-
-	@Prop({
-		type: Date,
-		default: () => new Date()
-	})
-	modifiedAt: Date
 }
 export type UserDocument = User & Document
 export const UserSchema = SchemaFactory.createForClass(User)

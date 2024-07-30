@@ -20,11 +20,14 @@ a {
 	text-white
 	shadow-sm
 	transition-all
-	hover:bg-blue-500
+	enabled:hover:bg-blue-500
+	hover:cursor-pointer
 	focus-visible:outline
 	focus-visible:outline-2
 	focus-visible:outline-offset-2
-	focus-visible:outline-blue-600;
+	focus-visible:outline-blue-600
+	disabled:cursor-not-allowed
+	disabled:opacity-50;
 }
 
 .form-input {
@@ -48,4 +51,8 @@ a {
 
 .score {
 	@apply font-bold text-5xl bg-gray-300  bg-opacity-30 px-6 py-1 border-2  border-gray-500;
+}
+
+section {
+	@apply mt-8 p-4 bg-slate-50 rounded-md border-2 border-gray-100;
 }

@@ -18,7 +18,7 @@ import { Response } from 'express'
 import { AuthExceptionFilter } from './common/filters/auth-exceptions.filter'
 import { AuthenticatedGuard } from './common/guards/authenticated.guard'
 import { LoginGuard } from './common/guards/login.guard'
-import { UserUpdateDto } from './users/users.dto'
+import { PasswordUpdateDto, UserUpdateDto } from './users/users.dto'
 import { UsersService } from './users/users.service'
 
 @Controller()
@@ -33,30 +33,30 @@ export class AppController {
 		return { users }
 	}
 
-	@Get('/login')
+	@Get('login')
 	@Render('login')
 	login(@Request() req): { message: string } {
 		return { message: req.flash('loginError') }
 	}
 
 	@UseGuards(LoginGuard)
-	@Post('/login')
+	@Post('login')
 	loggingIn(@Res() res: Response) {
 		res.redirect('/home')
 	}
 
 	@UseGuards(AuthenticatedGuard)
-	@Get('/home')
+	@Get('home')
 	@Render('home')
 	async getHome(@Request() req) {
 		const user = await this.usersService.findOne(+req.user.userId)
 		return { user }
 	}
 
-	@Get('/logout')
+	@Get('logout')
 	logout(@Request() req, @Res() res: Response) {
 		req.logout(req.user, (err) => {
-			if (err) res.status(500).json({ message: 'Error during logout.' })
+			if (err) res.status(400).json({ message: 'Error during logout.' })
 			else {
 				res.redirect('/')
 			}
@@ -69,7 +69,7 @@ export class AppController {
 		return res.sendFile(url, { root: 'public' })
 	}
 
-	@Get('/court')
+	@Get('court')
 	missingCourtId(@Res() res: Response) {
 		res.redirect('/')
 	}
@@ -88,5 +88,16 @@ export class AppController {
 	async updateUser(@Request() req, @Body() dto: UserUpdateDto) {
 		const userId = +req.user.id
 		return await this.usersService.update(userId, dto)
+	}
+
+	@UseGuards(AuthenticatedGuard)
+	@Post('users/change-password')
+	async updatePassword(@Request() req, @Res() resp: Response, @Body() dto: PasswordUpdateDto) {
+		const userId = +req.user.userId
+
+		if (dto.newPassword !== dto.confirmPassword) return resp.status(400).json({ message: 'Lösenord matchar inte' })
+
+		const res = await this.usersService.updatePassword(userId, dto.newPassword)
+		return resp.status(201).json(res)
 	}
 }

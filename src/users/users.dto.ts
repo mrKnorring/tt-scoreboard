@@ -24,3 +24,8 @@ export interface VenueUpdateDto {
 export interface UserUpdateDto {
 	venue: VenueUpdateDto
 }
+
+export interface PasswordUpdateDto {
+	newPassword: string
+	confirmPassword: string
+}
