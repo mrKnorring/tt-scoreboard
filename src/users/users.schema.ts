@@ -1,41 +1,153 @@
-import * as mongoose from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Document } from 'mongoose'
 
-export const TeamSchema = new mongoose.Schema({
-	score: Number,
-	name: String,
-	image: String
-})
+@Schema({ versionKey: false })
+export class Team {
+	@Prop({
+		type: Number,
+		default: 0
+	})
+	score: number
 
-export const MatchSchema = new mongoose.Schema({
-	id: Number,
-	table: String,
-	homeTeam: TeamSchema,
-	awayTeam: TeamSchema
-})
+	@Prop({
+		type: String,
+		required: true
+	})
+	name: string
 
-export const StyleSchema = new mongoose.Schema({
-	bg: String,
-	font: String
-})
+	@Prop({
+		type: String
+	})
+	image: string
+}
+export type TeamDocument = Team & Document
+export const TeamSchema = SchemaFactory.createForClass(Team)
 
-export const CourtSchema = new mongoose.Schema({
-	courtId: Number,
-	title: String,
-	style: StyleSchema,
-	matches: [MatchSchema]
-})
+@Schema({ versionKey: false })
+export class Match {
+	@Prop({
+		type: Number
+	})
+	id: number
 
-export const VenueSchema = new mongoose.Schema({
-	name: String,
-	courts: [CourtSchema]
-})
+	@Prop({
+		type: String,
+		required: true
+	})
+	table: string
 
-export const UserSchema = new mongoose.Schema({
-	userId: Number,
-	username: String,
-	password: String,
-	name: String,
-	venue: VenueSchema,
-	createdAt: { type: Date, default: Date.now },
-	updatedAt: { type: Date, default: Date.now }
-})
+	@Prop({
+		type: TeamSchema
+	})
+	homeTeam: TeamDocument
+
+	@Prop({
+		type: TeamSchema
+	})
+	awayTeam: TeamDocument
+}
+export type MatchDocument = Match & Document
+export const MatchSchema = SchemaFactory.createForClass(Match)
+
+@Schema({ versionKey: false })
+export class Style {
+	@Prop({
+		type: String
+	})
+	bg: string
+
+	@Prop({
+		type: String
+	})
+	font: string
+}
+export type StyleDocument = Style & Document
+export const StyleSchema = SchemaFactory.createForClass(Style)
+
+@Schema({ versionKey: false })
+export class Court {
+	@Prop({
+		type: Number,
+		required: true,
+		unique: true
+	})
+	courtId: number
+
+	@Prop({
+		type: String
+	})
+	title: string
+
+	@Prop({
+		type: StyleSchema
+	})
+	style: Style
+
+	@Prop({
+		type: [MatchSchema]
+	})
+	matches: Match[]
+}
+export type CourtDocument = Court & Document
+export const CourtSchema = SchemaFactory.createForClass(Court)
+
+@Schema({ versionKey: false })
+export class Venue {
+	@Prop({
+		type: String
+	})
+	name: string
+
+	@Prop({
+		type: [CourtSchema]
+	})
+	courts: [Court]
+}
+export type VenueDocument = Venue & Document
+export const VenueSchema = SchemaFactory.createForClass(Venue)
+
+@Schema({ versionKey: false })
+export class User {
+	@Prop({
+		type: Number,
+		unique: true,
+		required: true
+	})
+	userId: number
+
+	@Prop({
+		type: String,
+		unique: true,
+		required: true
+	})
+	username: string
+
+	@Prop({
+		type: String
+	})
+	name: string
+
+	@Prop({
+		type: String
+	})
+	password: string
+
+	@Prop({
+		type: VenueSchema
+	})
+	venue: Venue
+
+	@Prop({
+		type: Date,
+		default: () => new Date()
+	})
+	createdAt: Date
+
+	@Prop({
+		type: Date,
+		default: () => new Date()
+	})
+	modifiedAt: Date
+}
+export type UserDocument = User & Document
+export const UserSchema = SchemaFactory.createForClass(User)
