@@ -39,11 +39,3 @@ export const UserSchema = new mongoose.Schema({
 	createdAt: { type: Date, default: Date.now },
 	updatedAt: { type: Date, default: Date.now }
 })
-
-// UserSchema.pre('updateOne', function(next) {
-// 	const data = this.getUpdate()
-// 	console.log('in')
-// 	data.updatedAt = Date.now()
-// 	this.findOneAndUpdate({ userId: data.userId }, data).exec()
-// 	next()
-// })

@@ -9,8 +9,12 @@ import { UserUpdateDto } from './users.dto'
 export class UsersService {
 	constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
-	async findOne(username: string): Promise<any> {
-		return this.userModel.find({ username })
+	async getUser(username: string): Promise<User> {
+		return this.userModel.findOne({ username }).select({ _id: 0, __v: 0 }).lean()
+	}
+
+	async findOne(userId: number): Promise<User> {
+		return this.userModel.findOne({ userId }).select({ _id: 0, __v: 0, password: 0 }).lean()
 	}
 
 	async getCourt(courtId: string): Promise<Court> {
@@ -26,8 +30,8 @@ export class UsersService {
 	}
 
 	async update(userId: number, dto: UserUpdateDto): Promise<User> {
-		const updatedUser = await this.userModel.updateOne({ userId }, dto)
+		await this.userModel.updateOne({ userId }, dto)
 
-		return updatedUser
+		return await this.userModel.findOne({ userId })
 	}
 }

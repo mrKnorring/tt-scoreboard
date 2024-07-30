@@ -11,11 +11,7 @@ import { UsersModule } from './users/users.module'
 @Module({
 	imports: [
 		ConfigModule.forRoot({ validationSchema }),
-		MongooseModule.forRoot(config.DB_CONNECTION_STRING, {
-			useNewUrlParser: true,
-			keepAlive: true,
-			useUnifiedTopology: true
-		}),
+		MongooseModule.forRoot(config.DB_CONNECTION_STRING),
 		ScheduleModule.forRoot(),
 		AuthModule,
 		UsersModule

@@ -48,14 +48,19 @@ export class AppController {
 	@UseGuards(AuthenticatedGuard)
 	@Get('/home')
 	@Render('home')
-	getHome(@Request() req) {
-		return { user: req.user }
+	async getHome(@Request() req) {
+		const user = await this.usersService.findOne(+req.user.userId)
+		return { user }
 	}
 
 	@Get('/logout')
 	logout(@Request() req, @Res() res: Response) {
-		req.logout()
-		res.redirect('/')
+		req.logout(req.user, (err) => {
+			if (err) res.status(500).json({ message: 'Error during logout.' })
+			else {
+				res.redirect('/')
+			}
+		})
 	}
 
 	@Get('public/*')

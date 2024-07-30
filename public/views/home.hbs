@@ -2,12 +2,15 @@
 <div x-data="state">
 
 	<header class="flex w-full justify-center items-center relative">
-		<h1 class="text-3xl mt-4 font-bold m-auto"><span class="uppercase ">{{ user.username }}</span> inställningar
-		</h1>
+		<h1 class="text-3xl mt-4 font-bold m-auto">Inställningar</h1>
 		<div class=" absolute right-4 bottom-2">
 			<a href='/logout'>Logga ut </a>
 		</div>
 	</header>
+	<h3 class="text-xl text-center">
+		<span>{{user.name}}</span>
+		<span class="uppercase ">({{ user.username }})</span>
+	</h3>
 
 	<main class="p-4">
 		<div class="my-2 grid grid-cols-4 gap-4 ">
