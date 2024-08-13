@@ -50,6 +50,7 @@ export class AppController {
 	@Render('home')
 	async getHome(@Request() req) {
 		const user = await this.usersService.findOne(+req.user.userId)
+		console.log(user)
 		return { user }
 	}
 

@@ -12,6 +12,14 @@
 	</h3>
 
 	<main class="p-4 max-w-screen-lg m-auto  ">
+		<section>
+			<div x-data="{ hello: '{{user.name}}', data: {{json user}} }">
+				<div x-text="hello"></div>
+				<div x-text="data.venue.name"></div>
+				<button class="form-btn" @click="console.log(data)">TEST</button>
+			</div>
+		</section>
+
 		{{!-- SEARCH CLUB --}}
 		<section>
 			<h3 class="text-xl">Sök klubb</h3>
