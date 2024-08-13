@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import * as bcrypt from 'bcryptjs'
 import { Model } from 'mongoose'
-import { UserUpdateDto } from './users.dto'
+import { MatchUpdateDto, UserUpdateDto } from './users.dto'
 import { Court, User } from './users.schema'
 
 @Injectable()
@@ -41,5 +41,34 @@ export class UsersService {
 		await this.userModel.updateOne({ userId }, { $set: { password, updatedAt: Date.now() } })
 
 		return await this.findOne(userId)
+	}
+
+	async updateMatch(userId: number, courtId: number, matchDto: MatchUpdateDto): Promise<User> {
+
+		return await this.userModel.findOneAndUpdate(
+			{
+			  userId,
+			  'venue.courts': {
+				$elemMatch: {
+				  courtId,
+				  'matches.id': matchDto.match.id,
+				},
+			  },
+			},
+			{
+			  $set: {
+				'venue.courts.$[court].matches.$[match]': matchDto.match,
+			  },
+			},
+			{
+			  new: true,
+			  arrayFilters: [
+				{ 'court.courtId': +courtId },
+				{ 'match.id': +matchDto.match.id },
+			  ],
+			},
+		  )
+
+
 	}
 }

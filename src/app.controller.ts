@@ -18,7 +18,7 @@ import { Response } from 'express'
 import { AuthExceptionFilter } from './common/filters/auth-exceptions.filter'
 import { AuthenticatedGuard } from './common/guards/authenticated.guard'
 import { LoginGuard } from './common/guards/login.guard'
-import { PasswordUpdateDto, UserUpdateDto } from './users/users.dto'
+import { MatchUpdateDto, PasswordUpdateDto, UserUpdateDto } from './users/users.dto'
 import { UsersService } from './users/users.service'
 
 @Controller()
@@ -99,6 +99,16 @@ export class AppController {
 		if (dto.newPassword !== dto.confirmPassword) return resp.status(400).json({ message: 'Lösenord matchar inte' })
 
 		const res = await this.usersService.updatePassword(userId, dto.newPassword)
+		return resp.status(201).json(res)
+	}
+
+	@UseGuards(AuthenticatedGuard)
+	@Post('users/match')
+	async updateMatch(@Request() req, @Res() resp: Response, @Body() dto: MatchUpdateDto) {
+		const userId = +req.user.userId
+
+		const res = await this.usersService.updateMatch(+userId, +dto.courtId, dto)
+	
 		return resp.status(201).json(res)
 	}
 }

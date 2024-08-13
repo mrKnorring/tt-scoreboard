@@ -1,137 +1,137 @@
 <!-- public/views/home.hbs -->
-<div x-data="state">
-	<header class="flex w-full justify-center items-center relative ">
-		<h1 class="text-3xl mt-4 font-bold m-auto">Inställningar</h1>
-		<div class=" absolute right-4 bottom-2">
-			<a href='/logout'>Logga ut </a>
-		</div>
-	</header>
-	<h3 class="text-xl text-center">
-		<span>{{user.name}}</span>
-		<span class="uppercase ">({{ user.username }})</span>
-	</h3>
+<div x-data='state'>
+	<div x-data='{ data: {{json user}} }'>
 
-	<main class="p-4 max-w-screen-lg m-auto  ">
-		<section>
-			<div x-data="{ hello: '{{user.name}}', data: {{json user}} }">
-				<div x-text="hello"></div>
-				<div x-text="data.venue.name"></div>
-				<button class="form-btn" @click="console.log(data)">TEST</button>
+		<header class='flex w-full justify-center items-center relative'>
+			<h1 class='text-3xl mt-4 font-bold m-auto'>Inställningar</h1>
+			<div class='absolute right-4 bottom-2'>
+				<a href='/logout'>Logga ut </a>
 			</div>
-		</section>
+		</header>
+		<h3 class='text-xl text-center'>
+			<span>{{user.name}}</span>
+			<span class='uppercase'>({{user.username}})</span>
+		</h3>
 
-		{{!-- SEARCH CLUB --}}
-		<section>
-			<h3 class="text-xl">Sök klubb</h3>
-			<div class="my-2 grid grid-cols-4 gap-4 ">
-				<div class="col-span-3 ">
-					<input id="search" name="search" type="text" autocomplete="current-search" class="form-input"
-						placeholder="Sök klubb" x-model="search" @keyup.enter="searchClub">
+		<main class='p-4 max-w-screen-lg m-auto'>
 
-				</div>
-				<div class="col-span-1">
-
-					<button class="form-btn" @click="searchClub">Sök</button>
-				</div>
-			</div>
-
-			<div x-show="open">
-				<template x-if="clubUrl">
-					<img :src="clubUrl" class="max-w-32" />
-				</template>
-				<template x-if="!clubUrl">
-					<img src="/public/no-logo.png" class="max-w-32" />
-				</template>
-				<strong x-text="clubName"></strong>
-			</div>
-		</section>
-		{{#each user.venue.courts}}
-		<section>
-			<h3 class="text-xl">{{title}}</h3>
-			<h5>
-				<span>{{style.font}}</span>
-				<span>{{style.bg}}</span>
-			</h5>
-			<table class="w-full my-6 border-collapse border-slate-400">
-				{{#each matches}}
-				<tr>
-					<td class="border border-slate-400" rowspan="2">
-						<input name="search" type="text" class="form-input" value="{{table}}">
-
-					</td>
-					<td class="border border-slate-400 text-center">
-						<div class="flex justify-center">
-							<img src="{{homeTeam.image}}" class="max-w-12" />
-						</div>
-					</td>
-					<td class="border border-slate-400">
-						<input name="homeTeamName" type="text" class="form-input" value="{{homeTeam.name}}">
-					</td>
-					<td class="border border-slate-400">
-						<input name="homeTeamScore" type="text" class="form-input" value="{{homeTeam.score}}">
-					</td>
-					<td rowspan="2" class="border border-slate-400 px-2">
-						<div class="flex flex-col gap-2">
-
-							<button class="form-btn">Spara</button>
-							<button class="form-btn btn-danger">Ta bort</button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="border border-slate-400">
-						<div class="flex justify-center">
-							<img src="{{awayTeam.image}}" class="max-w-12" />
-						</div>
-					</td>
-					<td class="border border-slate-400">
-						<input name="awayTeamName" type="text" class="form-input" value="{{awayTeam.name}}">
-
-					</td>
-					<td class="border border-slate-400">
-						<input name="awayTeamScore" type="text" class="form-input" value="{{awayTeam.score}}">
-
-					</td>
-				</tr>
-				{{/each }}
-			</table>
-		</section>
-		{{/each}}
-		{{!-- CHANGE PASSWORD --}}
-		<section>
-			<h3 class="text-xl cursor-pointer" @click="passwordExpanded = !passwordExpanded">
-				Ändra lösenord
-				<template x-if="!passwordExpanded">
-					<span class="ml-1">&#9660;</span>
-				</template>
-				<template x-if="passwordExpanded">
-					<span class="ml-1">&#9650;</span>
-				</template>
-			</h3>
-			<div x-show="passwordExpanded" x-collapse>
-				<div class="my-2 grid grid-cols-7 gap-4 ">
-
-					<div class="col-span-3 ">
-						<input id="newPassword" name="newPassword" type="password" class="form-input"
-							placeholder="Nytt lösenord" x-model="newPassword" x-model="newPassword">
+			{{! SEARCH CLUB }}
+			<section>
+				<h3 class='text-xl'>Sök klubb</h3>
+				<div class='my-2 grid grid-cols-4 gap-4'>
+					<div class='col-span-3'>
+						<input id='search' name='search' type='text' autocomplete='current-search' class='form-input'
+							placeholder='Sök klubb' x-model='search' @keyup.enter='searchClub' />
 
 					</div>
-					<div class="col-span-3 ">
-						<input id="confirmPassword" name="confirmPassword" type="password" class="form-input"
-							placeholder="Bekräfta lösenord" x-model="confirmPassword" x-model="confirmPassword">
-					</div>
-					<div class="col-span-1">
-						<button class="form-btn" @click="changePassword" x-bind:disabled="disableNewPasswordBtn">
-							Spara
-						</button>
+					<div class='col-span-1'>
+
+						<button class='form-btn' @click='searchClub'>Sök</button>
 					</div>
 				</div>
-				<template x-if="passwordMessage">
-					<p class="mt-2 ml-2 text-sm text-gray-500" x-text="passwordMessage"></p>
-				</template>
-			</div>
-		</section>
-	</main>
+
+				<div x-show='open'>
+					<template x-if='clubUrl'>
+						<img :src='clubUrl' class='max-w-32' />
+					</template>
+					<template x-if='!clubUrl'>
+						<img src='/public/no-logo.png' class='max-w-32' />
+					</template>
+					<strong x-text='clubName'></strong>
+				</div>
+			</section>
+			<template x-for="court in data.venue.courts">
+				<section>
+					<h3 class='text-xl' x-text="court.title"></h3>
+					<h5>
+						<span x-text="court.style.font"></span>
+						<span x-text="court.style.bg"></span>
+					</h5>
+					<table class='w-full my-6 border-collapse border-slate-400'>
+						<template x-for="match in court.matches" :key="match.id">
+							<tbody>
+								<tr>
+									<td class='border border-slate-400' rowspan="2">
+										<input name='search' type='text' class='form-input' x-model="match.table" />
+
+									</td>
+									<td class='border border-slate-400 text-center'>
+										<div class='flex justify-center'>
+											<img :src="match.homeTeam.image" class='max-w-12' />
+										</div>
+									</td>
+									<td class='border border-slate-400'>
+										<input name='homeTeamName' type='text' class='form-input' x-model="match.homeTeam.name" />
+									</td>
+									<td class='border border-slate-400'>
+										<input name='homeTeamScore' type='text' class='form-input' x-model="match.homeTeam.score" />
+									</td>
+									<td rowspan='2' class='border border-slate-400 px-2'>
+										<div class='flex flex-col gap-2'>
+
+											<button class='form-btn' @click="saveMatch(court.courtId, match)">Spara</button>
+											<button class='form-btn btn-danger' @click="removeMatch()">Ta bort</button>
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<td class='border border-slate-400'>
+										<div class='flex justify-center'>
+											<img :src="match.awayTeam.image" class='max-w-12' />
+										</div>
+									</td>
+									<td class='border border-slate-400'>
+										<input name='awayTeamName' type='text' class='form-input' x-model="match.awayTeam.name" />
+
+									</td>
+									<td class='border border-slate-400'>
+										<input name='awayTeamScore' type='text' class='form-input' x-model="match.awayTeam.score" />
+									</td>
+								</tr> 
+							</tbody>
+						</template>
+					</table>
+				</section>
+			</template>
+
+			{{! CHANGE PASSWORD }}
+			<section>
+				<h3 class='text-xl cursor-pointer' @click='passwordExpanded = !passwordExpanded'>
+					Ändra lösenord
+					<template x-if='!passwordExpanded'>
+						<span class='ml-1'>&#9660;</span>
+					</template>
+					<template x-if='passwordExpanded'>
+						<span class='ml-1'>&#9650;</span>
+					</template>
+				</h3>
+				<div x-show='passwordExpanded' x-collapse>
+					<div class='my-2 grid grid-cols-7 gap-4'>
+
+						<div class='col-span-3'>
+							<input id='newPassword' name='newPassword' type='password' class='form-input'
+								placeholder='Nytt lösenord' x-model='newPassword' x-model='newPassword' />
+
+						</div>
+						<div class='col-span-3'>
+							<input id='confirmPassword' name='confirmPassword' type='password' class='form-input'
+								placeholder='Bekräfta lösenord' x-model='confirmPassword' x-model='confirmPassword' />
+						</div>
+						<div class='col-span-1'>
+							<button class='form-btn' @click='changePassword' x-bind:disabled='disableNewPasswordBtn'>
+								Spara
+							</button>
+						</div>
+					</div>
+					<template x-if='passwordMessage'>
+						<p class='mt-2 ml-2 text-sm text-gray-500' x-text='passwordMessage'></p>
+					</template>
+				</div>
+			</section>
+		</main>
+	</div>
+
 </div>
 
 <script>
@@ -157,6 +157,16 @@
 		return await response.json()
 	}
 
+	const postMatch = async (courtId, match) => {
+		const url = '/users/match'
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ courtId, match }),
+		})
+		return await response.json()
+	}
+
 	//	STATE
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('state', () => ({
@@ -168,7 +178,6 @@
 			confirmPassword: '',
 			passwordMessage: '',
 			passwordExpanded: false,
-			user: '{{user}}',
 
 			toggle() {
 				this.open = !this.open
@@ -200,6 +209,13 @@
 				} else {
 					this.passwordMessage = res.message
 				}
+			},
+			async saveMatch(courtId, match) {
+				const a = await postMatch(courtId, match)
+				console.log(a)
+			},
+			async removeMatch() {
+
 			},
 		}))
 	})
