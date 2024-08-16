@@ -50,7 +50,6 @@ export class AppController {
 	@Render('home')
 	async getHome(@Request() req) {
 		const user = await this.usersService.findOne(+req.user.userId)
-		console.log(user)
 		return { user }
 	}
 
@@ -108,7 +107,7 @@ export class AppController {
 		const userId = +req.user.userId
 
 		const res = await this.usersService.updateMatch(+userId, +dto.courtId, dto)
-	
+
 		return resp.status(201).json(res)
 	}
 }
