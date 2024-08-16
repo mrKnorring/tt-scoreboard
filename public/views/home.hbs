@@ -43,10 +43,45 @@
 			<template x-for="court in data.venue.courts">
 				<section>
 					<h3 class='text-xl' x-text="court.title"></h3>
-					<h5>
+					<table>
+						<tr>
+							<td>
+								<h3>Bakgrund: </h3>
+
+							</td>
+							<td>
+								<div class="ml-4 flex gap-4 items-baseline h-full">
+									<template x-for="c in bgColors">
+										<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-white border-dashed"
+											:class="{[c]:true, 'border-opacity-75': c === court.style.bg}"
+											@click="court.style.bg = c"></div>
+									</template>
+
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h3>Text: </h3>
+							</td>
+							<td>
+
+								<div class="ml-4 flex gap-4 items-baseline h-full">
+									<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-white bg-black border-dashed "
+										:class="{ 'border-opacity-75': 'text-black' === court.style.font}"
+										@click="court.style.font = 'text-black'"></div>
+									<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-black bg-white border-dashed"
+										:class="{ 'border-opacity-75': 'text-white' === court.style.font}"
+										@click="court.style.font = 'text-white'"></div>
+
+								</div>
+							</td>
+						</tr>
+					</table>
+					{{!-- <h5>
 						<span x-text="court.style.font"></span>
 						<span x-text="court.style.bg"></span>
-					</h5>
+					</h5> --}}
 					<table class='w-full my-6 border-collapse border-slate-400'>
 						<template x-for="match in court.matches" :key="match.id">
 							<tbody>
@@ -61,20 +96,23 @@
 										</div>
 									</td>
 									<td class='border border-slate-400'>
-										<input name='homeTeamName' type='text' class='form-input' x-model="match.homeTeam.name" />
+										<input name='homeTeamName' type='text' class='form-input'
+											x-model="match.homeTeam.name" />
 									</td>
 									<td class='border border-slate-400'>
-										<input name='homeTeamScore' type='text' class='form-input' x-model="match.homeTeam.score" />
+										<input name='homeTeamScore' type='text' class='form-input'
+											x-model="match.homeTeam.score" />
 									</td>
 									<td rowspan='2' class='border border-slate-400 px-2'>
 										<div class='flex flex-col gap-2'>
 
-											<button class='form-btn' @click="saveMatch(court.courtId, match)">Spara</button>
+											<button class='form-btn'
+												@click="saveMatch(court.courtId, match)">Spara</button>
 											<button class='form-btn btn-danger' @click="removeMatch()">Ta bort</button>
 										</div>
 									</td>
 								</tr>
-								
+
 								<tr>
 									<td class='border border-slate-400'>
 										<div class='flex justify-center'>
@@ -82,13 +120,15 @@
 										</div>
 									</td>
 									<td class='border border-slate-400'>
-										<input name='awayTeamName' type='text' class='form-input' x-model="match.awayTeam.name" />
+										<input name='awayTeamName' type='text' class='form-input'
+											x-model="match.awayTeam.name" />
 
 									</td>
 									<td class='border border-slate-400'>
-										<input name='awayTeamScore' type='text' class='form-input' x-model="match.awayTeam.score" />
+										<input name='awayTeamScore' type='text' class='form-input'
+											x-model="match.awayTeam.score" />
 									</td>
-								</tr> 
+								</tr>
 							</tbody>
 						</template>
 					</table>
@@ -178,6 +218,7 @@
 			confirmPassword: '',
 			passwordMessage: '',
 			passwordExpanded: false,
+			bgColors: ['bg-black', 'bg-blue-700', 'bg-red-700', 'bg-green-700', 'bg-yellow-400', 'bg-orange-400', 'bg-purple-700'],
 
 			toggle() {
 				this.open = !this.open
