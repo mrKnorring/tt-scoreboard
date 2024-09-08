@@ -17,5 +17,5 @@ steps:
 
     - script: |
           git remote add tt-scoreboard https://$(ghToken)@github.com/mrKnorring/tt-scoreboard.git
-          git push tt-scoreboard main
+          git push tt-scoreboard master
       displayName: 'Deploying api'
