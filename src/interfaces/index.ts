@@ -36,6 +36,7 @@ export interface Team {
 
 export type TBgColor =
 	| 'bg-black'
+	| 'bg-gray-700'
 	| 'bg-blue-700'
 	| 'bg-red-700'
 	| 'bg-green-700'
@@ -47,6 +48,7 @@ export type TBgColor =
 export enum BgColorEnum {
 	dark = 'bg-black',
 	blue = 'bg-blue-700',
+	gray = 'bg-gray-700',
 	red = 'bg-red-700',
 	green = 'bg-green-700',
 	purple = 'bg-purple-700',
