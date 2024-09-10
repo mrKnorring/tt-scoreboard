@@ -3,6 +3,9 @@
 	<div x-data='{ data: {{json user}} }'>
 
 		<header class='flex w-full justify-center items-center relative'>
+			<div class='absolute left-4 bottom-2'>
+				<a href='/' target="_blank" class="text-2xl">🏠</a>
+			</div>
 			<h1 class='text-3xl mt-4 font-bold m-auto'>Inställningar</h1>
 			<div class='absolute right-4 bottom-2'>
 				<a href='/logout'>Logga ut </a>
@@ -69,6 +72,7 @@
 						</div>
 						<input name='courtTitle' type='text' class='form-input' placeholder="Arrangemang"
 							x-model="court.title" />
+						<a x-bind:href="'/court/' + court.courtId" target="_blank" class="text-2xl">🔗</a>
 					</div>
 					<div x-show="!court.collapsed" x-collapse>
 
@@ -191,7 +195,7 @@
 			</div>
 
 			{{! CHANGE PASSWORD }}
-			<section>
+			<section class="mb-20">
 				<h3 class='text-xl cursor-pointer' @click='passwordExpanded = !passwordExpanded'>
 					Ändra lösenord
 					<template x-if='!passwordExpanded'>
@@ -230,6 +234,7 @@
 </div>
 
 <script>
+
 	// FUNCTIONS
 	const fetchClub = async (search) => {
 		const url = 'https://api-pingiskalk-wwr1.onrender.com/clubs/search'
@@ -269,7 +274,16 @@
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ venue }),
 		})
-		return await response.json()
+		if (response.ok) {
+			notie.alert({ type: 'success', position: 'bottom', text: 'Sparad!', time: 1.5 })
+
+			return await response.json()
+		} else {
+			notie.alert({ type: 'error', position: 'bottom', text: 'Något gick fel!' })
+
+			return null
+		}
+
 	}
 
 	//	STATE
