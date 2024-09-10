@@ -111,4 +111,13 @@ export class AppController {
 
 		return resp.status(201).json(res)
 	}
+
+	@UseGuards(AuthenticatedGuard)
+	@Post('users/venue')
+	async updateVenue(@Request() req, @Res() resp: Response, @Body() dto: UserUpdateDto) {
+		const userId = +req.user.userId
+		const res = await this.usersService.updateVenue(+userId, dto.venue)
+
+		return resp.status(201).json(res)
+	}
 }

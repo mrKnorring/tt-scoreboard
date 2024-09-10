@@ -14,40 +14,55 @@
 		</h3>
 
 		<main class='p-4 max-w-screen-lg m-auto'>
+			<section class="flex gap-6">
+				<div class="w-full">
+
+					<input name='courtTitle' type='text' class='form-input' placeholder="Arena"
+						x-model="data.venue.name" />
+				</div>
+				<button class='form-btn max-w-24' @click="saveVenue(data.venue)">Spara</button>
+
+			</section>
 
 			{{! SEARCH CLUB }}
-			<section>
-				<h3 class='text-xl'>Sök klubb</h3>
-				<div class='my-2 grid grid-cols-4 gap-4'>
-					<div class='col-span-3'>
-						<input id='search' name='search' type='text' autocomplete='current-search' class='form-input'
-							placeholder='Sök klubb' x-model='search' @keyup.enter='searchClub' />
+			<section class="flex gap-6 ">
+				<aside class="w-full">
+					<h3 class='text-xl'>Sök klubb</h3>
+					<div class='my-2 grid grid-cols-4 gap-4'>
+						<div class='col-span-3'>
+							<input id='search' name='search' type='text' autocomplete='current-search'
+								class='form-input' placeholder='Sök klubb' x-model='search' @keyup.enter='searchClub' />
 
+						</div>
+						<div class='col-span-1'>
+							<button class='form-btn' @click='searchClub'>Sök</button>
+						</div>
 					</div>
-					<div class='col-span-1'>
-
-						<button class='form-btn' @click='searchClub'>Sök</button>
+				</aside>
+				<aside class="w-1/3 h-36">
+					<div x-show='open' class="text-center flex justify-center flex-col items-center">
+						<template x-if='clubUrl'>
+							<img :src='clubUrl' class='max-w-32' />
+						</template>
+						<template x-if='!clubUrl'>
+							<img src='/public/no-logo.png' class='max-w-32' />
+						</template>
+						<strong x-text='clubName'></strong>
 					</div>
-				</div>
-
-				<div x-show='open'>
-					<template x-if='clubUrl'>
-						<img :src='clubUrl' class='max-w-32' />
-					</template>
-					<template x-if='!clubUrl'>
-						<img src='/public/no-logo.png' class='max-w-32' />
-					</template>
-					<strong x-text='clubName'></strong>
-				</div>
+				</aside>
 			</section>
-			<template x-for="court in data.venue.courts">
-				<section>
-					<h3 class='text-xl' x-text="court.title"></h3>
+			<h2 class="text-2xl mt-4">Banor</h2>
+			<template x-for="(court, i) in data.venue.courts">
+				<section class="relative">
+					<span class="remove" @click="removeCourt(data.venue.courts, i)">
+						x
+					</span>
+					<input name='courtTitle' type='text' class='form-input mb-4' placeholder="Arrangemang"
+						x-model="court.title" />
 					<table>
 						<tr>
 							<td>
 								<h3>Bakgrund: </h3>
-
 							</td>
 							<td>
 								<div class="ml-4 flex gap-4 items-baseline h-full">
@@ -78,12 +93,8 @@
 							</td>
 						</tr>
 					</table>
-					{{!-- <h5>
-						<span x-text="court.style.font"></span>
-						<span x-text="court.style.bg"></span>
-					</h5> --}}
-					<table class='w-full my-6 border-collapse border-slate-400'>
-						<template x-for="match in court.matches" :key="match.id">
+					<table class='w-full mt-6 mb-3 border-collapse border-slate-400'>
+						<template x-for="(match, index) in court.matches" :key="match.id">
 							<tbody>
 								<tr>
 									<td class='border border-slate-400' rowspan="2">
@@ -91,8 +102,19 @@
 
 									</td>
 									<td class='border border-slate-400 text-center'>
-										<div class='flex justify-center'>
-											<img :src="match.homeTeam.image" class='max-w-12' />
+										<div class='flex justify-center w-full'>
+											<template x-if="match.homeTeam.image">
+												<div class="relative flex justify-center">
+													<img :src="match.homeTeam.image" class='max-w-12' />
+													<span class="remove" @click="removeImage(match.homeTeam)">
+														x
+													</span>
+												</div>
+											</template>
+											<template x-if="!match.homeTeam.image">
+												<span class='font-bold cursor-pointer text-xl'
+													@click="addImage(match.homeTeam)">+</span>
+											</template>
 										</div>
 									</td>
 									<td class='border border-slate-400'>
@@ -105,18 +127,27 @@
 									</td>
 									<td rowspan='2' class='border border-slate-400 px-2'>
 										<div class='flex flex-col gap-2'>
-
-											<button class='form-btn'
-												@click="saveMatch(court.courtId, match)">Spara</button>
-											<button class='form-btn btn-danger' @click="removeMatch()">Ta bort</button>
+											<button class='form-btn btn-danger'
+												@click="removeMatch(court.matches, index)">Ta bort</button>
 										</div>
 									</td>
 								</tr>
 
 								<tr>
 									<td class='border border-slate-400'>
-										<div class='flex justify-center'>
-											<img :src="match.awayTeam.image" class='max-w-12' />
+										<div class='flex justify-center w-full'>
+											<template x-if="match.awayTeam.image">
+												<div class="relative flex justify-center">
+													<img :src="match.awayTeam.image" class='max-w-12' />
+													<span class="remove" @click="removeImage(match.awayTeam)">
+														x
+													</span>
+												</div>
+											</template>
+											<template x-if="!match.awayTeam.image">
+												<span class='font-bold cursor-pointer text-xl'
+													@click="addImage(match.awayTeam)">+</span>
+											</template>
 										</div>
 									</td>
 									<td class='border border-slate-400'>
@@ -132,8 +163,17 @@
 							</tbody>
 						</template>
 					</table>
+					<div class="flex mb-3">
+						<button class='form-btn btn-lime !w-auto' @click="addMatch(court.matches)">Ny match</button>
+					</div>
+					<div class="flex justify-end">
+						<button class='form-btn max-w-24' @click="saveVenue(data.venue)">Spara</button>
+					</div>
 				</section>
 			</template>
+			<div class="flex my-3">
+				<button class='form-btn btn-emerald !w-auto' @click="addCourt(data.venue.courts)">Ny Bana</button>
+			</div>
 
 			{{! CHANGE PASSWORD }}
 			<section>
@@ -207,6 +247,16 @@
 		return await response.json()
 	}
 
+	const postVenue = async (venue) => {
+		const url = '/users/venue'
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ venue }),
+		})
+		return await response.json()
+	}
+
 	//	STATE
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('state', () => ({
@@ -255,9 +305,57 @@
 				const a = await postMatch(courtId, match)
 				console.log(a)
 			},
-			async removeMatch() {
-
+			async saveVenue(venue) {
+				const a = await postVenue(venue)
+				console.log(a)
 			},
+			addMatch(array) {
+				array.push({
+					id: Math.floor(10000 + Math.random() * 90000),
+					table: '',
+					homeTeam: {
+						score: 0,
+						name: '',
+						image: ''
+					},
+					awayTeam: {
+						score: 0,
+						name: '',
+						image: ''
+					},
+				})
+			},
+			removeMatch(array, index) {
+				array.splice(index, 1)
+			},
+			addImage(match) {
+				if (this.clubUrl) {
+					match.image = this.clubUrl
+					this.open = false
+					this.clubUrl = ''
+					this.search = ''
+					this.clubName = ''
+				}
+			},
+			removeImage(match) {
+				match.image = ''
+			},
+			addCourt(courts) {
+				courts.push({
+					courtId: Math.floor(100 + Math.random() * 900),
+					title: '',
+					style: {
+						bg: 'bg-black',
+						font: 'text-white'
+					},
+					matches: []
+				})
+			},
+			removeCourt(courts, index) {
+				if (confirm('Är du säker? Detta kan inte ångras!')) {
+					courts.splice(index, 1)
+				}
+			}
 		}))
 	})
 </script>

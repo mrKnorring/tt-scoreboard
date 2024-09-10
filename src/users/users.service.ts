@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import * as bcrypt from 'bcryptjs'
 import { Model } from 'mongoose'
-import { MatchUpdateDto, UserUpdateDto } from './users.dto'
+import { MatchUpdateDto, UserUpdateDto, VenueUpdateDto } from './users.dto'
 import { Court, User } from './users.schema'
 
 @Injectable()
@@ -44,31 +44,36 @@ export class UsersService {
 	}
 
 	async updateMatch(userId: number, courtId: number, matchDto: MatchUpdateDto): Promise<User> {
-
 		return await this.userModel.findOneAndUpdate(
 			{
-			  userId,
-			  'venue.courts': {
-				$elemMatch: {
-				  courtId,
-				  'matches.id': matchDto.match.id,
-				},
-			  },
+				userId,
+				'venue.courts': {
+					$elemMatch: {
+						courtId,
+						'matches.id': matchDto.match.id
+					}
+				}
 			},
 			{
-			  $set: {
-				'venue.courts.$[court].matches.$[match]': matchDto.match,
-			  },
+				$set: {
+					'venue.courts.$[court].matches.$[match]': matchDto.match
+				}
 			},
 			{
-			  new: true,
-			  arrayFilters: [
-				{ 'court.courtId': +courtId },
-				{ 'match.id': +matchDto.match.id },
-			  ],
-			},
-		  )
+				new: true,
+				arrayFilters: [{ 'court.courtId': +courtId }, { 'match.id': +matchDto.match.id }]
+			}
+		)
+	}
 
+	async updateVenue(userId: number, venue: VenueUpdateDto): Promise<User> {
+		await this.userModel.updateOne(
+			{ userId },
+			{
+				$set: { venue }
+			}
+		)
 
+		return await this.findOne(userId)
 	}
 }
