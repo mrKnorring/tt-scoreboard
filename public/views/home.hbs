@@ -57,118 +57,133 @@
 					<span class="remove" @click="removeCourt(data.venue.courts, i)">
 						x
 					</span>
-					<input name='courtTitle' type='text' class='form-input mb-4' placeholder="Arrangemang"
-						x-model="court.title" />
-					<table>
-						<tr>
-							<td>
-								<h3>Bakgrund: </h3>
-							</td>
-							<td>
-								<div class="ml-4 flex gap-4 items-baseline h-full">
-									<template x-for="c in bgColors">
-										<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-white border-dashed"
-											:class="{[c]:true, 'border-opacity-75': c === court.style.bg}"
-											@click="court.style.bg = c"></div>
-									</template>
+					<div class="flex justify-center gap-2">
+						<div class="cursor-pointer flex items-center" @click="court.collapsed = !court.collapsed">
 
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<h3>Text: </h3>
-							</td>
-							<td>
-
-								<div class="ml-4 flex gap-4 items-baseline h-full">
-									<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-white bg-black border-dashed "
-										:class="{ 'border-opacity-75': 'text-black' === court.style.font}"
-										@click="court.style.font = 'text-black'"></div>
-									<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-black bg-white border-dashed"
-										:class="{ 'border-opacity-75': 'text-white' === court.style.font}"
-										@click="court.style.font = 'text-white'"></div>
-
-								</div>
-							</td>
-						</tr>
-					</table>
-					<table class='w-full mt-6 mb-3 border-collapse border-slate-400'>
-						<template x-for="(match, index) in court.matches" :key="match.id">
-							<tbody>
-								<tr>
-									<td class='border border-slate-400' rowspan="2">
-										<input name='search' type='text' class='form-input' x-model="match.table" />
-
-									</td>
-									<td class='border border-slate-400 text-center'>
-										<div class='flex justify-center w-full'>
-											<template x-if="match.homeTeam.image">
-												<div class="relative flex justify-center">
-													<img :src="match.homeTeam.image" class='max-w-12' />
-													<span class="remove" @click="removeImage(match.homeTeam)">
-														x
-													</span>
-												</div>
-											</template>
-											<template x-if="!match.homeTeam.image">
-												<span class='font-bold cursor-pointer text-xl'
-													@click="addImage(match.homeTeam)">+</span>
-											</template>
-										</div>
-									</td>
-									<td class='border border-slate-400'>
-										<input name='homeTeamName' type='text' class='form-input'
-											x-model="match.homeTeam.name" />
-									</td>
-									<td class='border border-slate-400'>
-										<input name='homeTeamScore' type='text' class='form-input'
-											x-model="match.homeTeam.score" />
-									</td>
-									<td rowspan='2' class='border border-slate-400 px-2'>
-										<div class='flex flex-col gap-2'>
-											<button class='form-btn btn-danger'
-												@click="removeMatch(court.matches, index)">Ta bort</button>
-										</div>
-									</td>
-								</tr>
-
-								<tr>
-									<td class='border border-slate-400'>
-										<div class='flex justify-center w-full'>
-											<template x-if="match.awayTeam.image">
-												<div class="relative flex justify-center">
-													<img :src="match.awayTeam.image" class='max-w-12' />
-													<span class="remove" @click="removeImage(match.awayTeam)">
-														x
-													</span>
-												</div>
-											</template>
-											<template x-if="!match.awayTeam.image">
-												<span class='font-bold cursor-pointer text-xl'
-													@click="addImage(match.awayTeam)">+</span>
-											</template>
-										</div>
-									</td>
-									<td class='border border-slate-400'>
-										<input name='awayTeamName' type='text' class='form-input'
-											x-model="match.awayTeam.name" />
-
-									</td>
-									<td class='border border-slate-400'>
-										<input name='awayTeamScore' type='text' class='form-input'
-											x-model="match.awayTeam.score" />
-									</td>
-								</tr>
-							</tbody>
-						</template>
-					</table>
-					<div class="flex mb-3">
-						<button class='form-btn btn-lime !w-auto' @click="addMatch(court.matches)">Ny match</button>
+							<template x-if='court.collapsed'>
+								<span>&#9660;</span>
+							</template>
+							<template x-if='!court.collapsed'>
+								<span>&#9650;</span>
+							</template>
+						</div>
+						<input name='courtTitle' type='text' class='form-input' placeholder="Arrangemang"
+							x-model="court.title" />
 					</div>
-					<div class="flex justify-end">
-						<button class='form-btn max-w-24' @click="saveVenue(data.venue)">Spara</button>
+					<div x-show="!court.collapsed" x-collapse>
+
+						<table class="mt-4">
+							<tr>
+								<td>
+									<h3>Bakgrund: </h3>
+								</td>
+								<td>
+									<div class="ml-4 flex gap-4 items-baseline h-full">
+										<template x-for="c in bgColors">
+											<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-white border-dashed"
+												:class="{[c]:true, 'border-opacity-75': c === court.style.bg}"
+												@click="court.style.bg = c"></div>
+										</template>
+
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h3>Text: </h3>
+								</td>
+								<td>
+
+									<div class="ml-4 flex gap-4 items-baseline h-full">
+										<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-white bg-black border-dashed "
+											:class="{ 'border-opacity-75': 'text-black' === court.style.font}"
+											@click="court.style.font = 'text-black'"></div>
+										<div class="w-4 h-4 rounded-sm cursor-pointer border-2 border-opacity-0 border-black bg-white border-dashed"
+											:class="{ 'border-opacity-75': 'text-white' === court.style.font}"
+											@click="court.style.font = 'text-white'"></div>
+
+									</div>
+								</td>
+							</tr>
+						</table>
+						<table class='w-full mt-6 mb-3 border-collapse border-slate-400'>
+							<template x-for="(match, index) in court.matches" :key="match.id">
+								<tbody>
+									<tr>
+										<td class='border border-slate-400' rowspan="2">
+											<input name='search' type='text' class='form-input' x-model="match.table" />
+
+										</td>
+										<td class='border border-slate-400 text-center'>
+											<div class='flex justify-center w-full'>
+												<template x-if="match.homeTeam.image">
+													<div class="relative flex justify-center">
+														<img :src="match.homeTeam.image" class='max-w-12' />
+														<span class="remove" @click="removeImage(match.homeTeam)">
+															x
+														</span>
+													</div>
+												</template>
+												<template x-if="!match.homeTeam.image">
+													<span class='font-bold cursor-pointer text-xl'
+														@click="addImage(match.homeTeam)">+</span>
+												</template>
+											</div>
+										</td>
+										<td class='border border-slate-400'>
+											<input name='homeTeamName' type='text' class='form-input'
+												x-model="match.homeTeam.name" />
+										</td>
+										<td class='border border-slate-400'>
+											<input name='homeTeamScore' type='text' class='form-input'
+												x-model="match.homeTeam.score" />
+										</td>
+										<td rowspan='2' class='border border-slate-400 px-2'>
+											<div class='flex flex-col gap-2'>
+												<button class='form-btn btn-danger'
+													@click="removeMatch(court.matches, index)">Ta bort</button>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td class='border border-slate-400'>
+											<div class='flex justify-center w-full'>
+												<template x-if="match.awayTeam.image">
+													<div class="relative flex justify-center">
+														<img :src="match.awayTeam.image" class='max-w-12' />
+														<span class="remove" @click="removeImage(match.awayTeam)">
+															x
+														</span>
+													</div>
+												</template>
+												<template x-if="!match.awayTeam.image">
+													<span class='font-bold cursor-pointer text-xl'
+														@click="addImage(match.awayTeam)">+</span>
+												</template>
+											</div>
+										</td>
+										<td class='border border-slate-400'>
+											<input name='awayTeamName' type='text' class='form-input'
+												x-model="match.awayTeam.name" />
+
+										</td>
+										<td class='border border-slate-400'>
+											<input name='awayTeamScore' type='text' class='form-input'
+												x-model="match.awayTeam.score" />
+										</td>
+									</tr>
+								</tbody>
+							</template>
+						</table>
+						<div class="flex mb-3">
+							<button class='form-btn btn-lime !w-auto' @click="addMatch(court.matches)">Ny match</button>
+						</div>
+						<div class="flex justify-end">
+							<button class='form-btn max-w-24' @click="saveVenue(data.venue)">Spara</button>
+						</div>
 					</div>
+
 				</section>
 			</template>
 			<div class="flex my-3">
